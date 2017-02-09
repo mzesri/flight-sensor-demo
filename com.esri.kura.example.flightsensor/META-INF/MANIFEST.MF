@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Flight Sensor
+Bundle-SymbolicName: com.esri.kura.example.flightsensor
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: ESRI
+Import-Package: org.eclipse.kura.cloud;version="1.0.1",
+ org.eclipse.kura.configuration;version="1.1.1",
+ org.eclipse.kura.message;version="1.1.0",
+ org.osgi.service.component;version="1.2.0",
+ org.slf4j;version="1.7.21"
+Service-Component: OSGI-INF/component.xml,
+ OSGI-INF/flightsensor.xml
+Bundle-ClassPath: .,
+ lib/jackson-annotations-2.6.5.jar,
+ lib/jackson-core-2.6.5.jar,
+ lib/jackson-databind-2.6.5.jar

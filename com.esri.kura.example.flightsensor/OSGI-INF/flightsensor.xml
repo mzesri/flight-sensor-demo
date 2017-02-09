@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" 
+    name="com.esri.kura.example.flightsensor.FlightSensor"
+    activate="activate" 
+    deactivate="deactivate" 
+    modified="updated" 
+    enabled="true"
+    immediate="true"
+    configuration-policy="require">
+	<implementation class="com.esri.kura.example.flightsensor.FlightSensor"/>
+
+   <!-- If the component is configurable through the Kura ConfigurationService, it must expose a Service. -->
+   <property name="service.pid" type="String" value="com.esri.kura.example.flightsensor.FlightSensor"/>
+   <service>
+       <provide interface="com.esri.kura.example.flightsensor.FlightSensor"/>
+   </service>
+   
+   <reference name="CloudService"
+              policy="static"
+              bind="setCloudService"       
+              unbind="unsetCloudService"       
+              cardinality="1..1" 
+              interface="org.eclipse.kura.cloud.CloudService"/>
+</scr:component>
