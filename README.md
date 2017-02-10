@@ -13,12 +13,14 @@ This guide assumes you already have the Raspberry Pi provisioned.  This includes
 Reference: http://www.satsignal.eu/raspberry-pi/dump1090.html
 
 1. Always update and upgrade your OS 
+    
     ```
     sudo apt-get update
     sudo apt-get upgrade
     sudo reboot
     ```
 2. Install tools and related software
+    
     ```
     sudo apt-get install git-core
     sudo apt-get install git
@@ -27,7 +29,8 @@ Reference: http://www.satsignal.eu/raspberry-pi/dump1090.html
     sudo apt-get install build-essential
     ```
 3. Install the rtl-sdr software that enables the USB stick
-    ```
+   
+   ```
    git clone git://git.osmocom.org/rtl-sdr.git
    cd rtl-sdr/
    mkdir build
@@ -37,12 +40,14 @@ Reference: http://www.satsignal.eu/raspberry-pi/dump1090.html
    sudo make install
    ```
 4. Make sure the following command returns nothing
+    
     ```
     sudo ldconfig
     ```
 5. Insert the NEDSDR USB stick to the raspberry Pi
 
 6. Tell the system what the new device is allowed to do
+    
     ```
    18  sudo ldconfig
    19  cd ~
@@ -51,6 +56,7 @@ Reference: http://www.satsignal.eu/raspberry-pi/dump1090.html
    ```
    
 7. Test the device for the first time with the following command.
+    
     ```
     rtl_test -t
     ```
@@ -66,21 +72,25 @@ Reference: http://www.satsignal.eu/raspberry-pi/dump1090.html
     Failed to open rtlsdr device #0.
     
 8. If you did get this error then edit add the following blacklist text to solve the problem.
+    
     ```
     sudo vi /etc/modprobe.d/raspi-blacklist.conf
     ```
     add the following lines in the file.
+    
     ```
     blacklist dvb_usb_rtl28xxu
     blacklist rtl2832
     blacklist rtl2830
     ```
     Save and exit the editor.
+    
     ```
     sudo reboot
     ```
     
 9. Install dump1090
+    
     ```
     cd ~
     git clone git://github.com/MalcolmRobb/dump1090.git
@@ -91,6 +101,7 @@ Reference: http://www.satsignal.eu/raspberry-pi/dump1090.html
     ./dump1090 --interactive --net
     ```
     At this point, if you should be able to see the flight data it captured.  You can use the following command to see all dump1090 options.
+    
     ```
     ./dump1090 --help
     ```
