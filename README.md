@@ -106,10 +106,90 @@ Reference: http://www.satsignal.eu/raspberry-pi/dump1090.html
     ./dump1090 --help
     ```
     If you don't want the flights to be displayed on the console, use the --quiet option instead of the --interactive option.     The --net option starts a web server on the localhost:8080.  You can poll the flights from this web server by the             following command:
+    
     ```
     curl http://localhost:8080/data.json
     ```
+    
     This marks the end of the device setup.
     
     
 ## Install Kura and the FlightSensor Package on Raspberry Pi
+
+Eclipse Kura is an Eclipse IoT project that provides a platform for building IoT gateways. It is a smart application container that enables remote management of such gateways and provides a wide range of APIs for allowing you to write and deploy your own IoT application.  
+
+Reference: https://eclipse.github.io/kura/doc/raspberry-pi-quick-start.html
+
+1. Make sure your java version is 1.8.  
+
+   ```
+   java -version
+   ```
+   
+   If it is not 1.8, you need to refer to the above link to install the latest version.
+   
+2. Install the gdebi command line tool:
+
+   ```
+   sudo apt-get install gdebi-core
+   ```
+   
+3. Download the Kura project. 
+
+   ```
+   wget http://download.eclipse.org/kura/releases/2.1.0/kura_2.1.0_raspberry-pi-2-3-nn_installer.deb
+   ```
+   
+4. Install Kura and reboot
+
+   ```
+   sudo gdebi kura_2.1.0_raspberry-pi-2-3-nn_installer.deb
+   ```
+   
+5. Login to Kura
+
+   Find the ip or host of the Raspberry Pi.  Goto http://[raspberry_pi_ip_or_host]/kura on a browser.  Whether you should use ip or hostname all depneds on your network setup.  If this does not work, you need to go to the desktop of the raspberry pi and use the browser there.  Then you can use http://localhost/kura and the url.  When you initially connect to Kura, you will be prompted with a log in page.  Type admin/admin as the user/password.  Now you are in the Kura UI.
+   
+6. Configure the Cloud services
+
+   Click on the Cloud Services label on the left hand.  Select the MqttDataTransport tab.  If you have your own broker, enter the url under **broker-url**.  Otherwise, you can use the Eclipse IoT sandbox url which is 
+   
+   ```
+   mqtt://iot.eclipse.org:1883/
+   ```
+   
+   Enter a client-id.  The topic your raspberry pi will write to is ${account-name}/${client-id}/${service-name}/${semantic topic}.  On this page, you can define the account-name and the client-id.
+   
+   Click **Apply** to save the change.
+   
+   Select the DataService tab.  Change **Enable automatic connect of the Data Publishers on startup** to true.  
+   
+   Click **Apply** to save the change.
+   
+7. Compile and install the FlightSensor package.
+   
+   Download the flightsensor eclipse project from this repo.  Import the project to Eclipse.  Follow this example https://eclipse.github.io/kura/doc/hello-example.html to build the OSGI bundle and create a deployment package.
+   
+   Once you have the .dp file, you can use the Kura UI that is open on your mac or pc to import the package.  If you run the Kura UI on the pi, you will need to scp the file to the pi first.
+   
+   ```
+   scp flight_sensor.dp pi@[ip]
+   ```
+   
+   Then, on the Kura UI, click on **Packages** on the left side.  Click on **+ Install/Upgrade** to install the package.
+   
+   Once the package is successfully installed, you will see the FlightSensor under Services on the left side of the Kura UI.
+   
+8.  Configure Flight Sensor
+
+   There are three properties you need to set for Flight Sensor.  
+   
+   - url: This should be set to http://localhost:8080/data.json
+   - Publish.rate: This property determines how often you send the flight data to the Mqtt server.  In my demo, I set it to 6 secnods.
+   - publish.semanticTopic: This is the last part of the topic string.  So, if your account name is "account-name", your client id is "abc", your flight sensor package name is FlightSensor and your semanticTopic is set to "data", your topic string will be "account-name/abc/FlightSensor/data".  
+   
+   Click **Apply** to save the change.
+   
+   Now you are able to receive the flight data nad send the flight data to the mqtt server at a fixed interval.
+   
+## Set up a GeoEvent server to publish the flight info in JSON format to feature services.
