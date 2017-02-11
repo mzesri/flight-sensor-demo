@@ -190,6 +190,30 @@ Reference: https://eclipse.github.io/kura/doc/raspberry-pi-quick-start.html
    
    Click **Apply** to save the change.
    
-   Now you are able to receive the flight data nad send the flight data to the mqtt server at a fixed interval.
+   Now you are able to receive the flight data nad send the flight data to the mqtt server at a fixed interval.  You can use the MQTTLens (https://chrome.google.com/webstore/detail/mqttlens/hemojaaeigabkbcookmlgmdigohjobjm?hl=en) to connect to the Mqtt broker and subscribe to your topic.
    
 ## Set up a GeoEvent server to publish the flight info in JSON format to feature services.
+
+This is assuming you have access to and the knowledge of the ArcGIS server and GeoEvent extension.  This is really the focus of this exercise since this demo is created for the IoT session of the Esri DevSummit.
+
+Reference: https://server.arcgis.com/en/geoevent/
+
+1. Install the Mqtt transport on Geoevent
+
+   Download or clone the Mqtt-for-geoevent project from here https://github.com/Esri/mqtt-for-geoevent.
+   
+   Since it is a maven project, you need java and maven installed before you can build the project.  You build the project with the following command:
+   
+   ```
+   mvn clean install
+   ```
+   
+   This will create the following jar file:
+   
+   ....\mqtt-for-geoevent\mqtt-transport\target\mqtt-transport-10.5.0.jar
+   
+   Copy this jar file and paste it in the deploy folder under your GeoEvent install folder.  If you need to copy it to a remote machine, make sure you copy the jar file to a temp folder first on the remote machine and then drag it to the deploy folder.  You can also use the ArcGIS GeoEvent Manager->Site->Components->Transports->Add Local Transport tool to import the jar.  This will install the custom transport on Geoevent.
+   
+2. Create an Input in Geoevent
+
+
