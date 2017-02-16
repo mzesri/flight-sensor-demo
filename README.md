@@ -214,6 +214,14 @@ Reference: https://server.arcgis.com/en/geoevent/
    
    Copy this jar file and paste it in the deploy folder under your GeoEvent install folder.  If you need to copy it to a remote machine, make sure you copy the jar file to a temp folder first on the remote machine and then drag it to the deploy folder.  You can also use the ArcGIS GeoEvent Manager->Site->Components->Transports->Add Local Transport tool to import the jar.  This will install the custom transport on Geoevent.
    
-2. Create an Input in Geoevent
+2. Create GeoEvent Definitions.
+
+   Create two GeoEvent Definitions as illustrated in the diagram below.  The diffrence between these two GeoEvent Definitions is that one has an extra field called received_time which is a time stamp.  We will use a Field Mapper to update this field with the received timestamp when we save the data into the feature service.
+   
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/FlightSensorGED.png)
+   
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/FlightSeonsorGED-withTS.png)
+   
+   
 
 
