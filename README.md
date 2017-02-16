@@ -214,14 +214,30 @@ Reference: https://server.arcgis.com/en/geoevent/
    
    Copy this jar file and paste it in the deploy folder under your GeoEvent install folder.  If you need to copy it to a remote machine, make sure you copy the jar file to a temp folder first on the remote machine and then drag it to the deploy folder.  You can also use the ArcGIS GeoEvent Manager->Site->Components->Transports->Add Local Transport tool to import the jar.  This will install the custom transport on Geoevent.
    
+   
+2. Create an Inbound Connector from the Newly Installed transport.
+
+   Make sure you choose the MqttInboundTransport and the Generic-JSON adapter for this connector.
+   
+   ![Image of MQTT-json inbound connector]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/Mqtt-Connector.png)
+   
 2. Create GeoEvent Definitions.
 
    Create two GeoEvent Definitions as illustrated in the diagram below.  The diffrence between these two GeoEvent Definitions is that one has an extra field called received_time which is a time stamp.  We will use a Field Mapper to update this field with the received timestamp when we save the data into the feature service.
    
+   ![Image of GeoEvent Definition FlightSensorGED]
    (https://github.com/mzesri/flight-sensor-demo/blob/master/images/FlightSensorGED.png)
    
+   ![Image of GeoEvent Definition FlightSensorGED-withTimeStamp]
    (https://github.com/mzesri/flight-sensor-demo/blob/master/images/FlightSeonsorGED-withTS.png)
    
    
+3. Create Two new Feature Services.
 
+   Use your favorite too to create two new feature services.  In my case, they are called Flights and Flights_trail.  Their schema should be the same.  They should all match the FlightSensorGED-withTimeStamp GoeEvent Definition.  
+   
+4. Create an Input Connector using the 
+
+   
 
