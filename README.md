@@ -222,9 +222,9 @@ Reference: https://server.arcgis.com/en/geoevent/
    ![Image of MQTT-json inbound connector]
    (https://github.com/mzesri/flight-sensor-demo/blob/master/images/Mqtt-Connector.png)
    
-2. Create GeoEvent Definitions.
+3. Create GeoEvent Definitions.
 
-   Create two GeoEvent Definitions as illustrated in the diagram below.  The diffrence between these two GeoEvent Definitions is that one has an extra field called received_time which is a time stamp.  We will use a Field Mapper to update this field with the received timestamp when we save the data into the feature service.
+   Create two GeoEvent Definitions as illustrated in the diagrams below.  The diffrence between these two GeoEvent Definitions is that one has an extra field called received_time which is a time stamp.  We will use a Field Mapper to update this field with the received timestamp when we save the data into the feature service.
    
    ![Image of GeoEvent Definition FlightSensorGED]
    (https://github.com/mzesri/flight-sensor-demo/blob/master/images/FlightSensorGED.png)
@@ -233,11 +233,55 @@ Reference: https://server.arcgis.com/en/geoevent/
    (https://github.com/mzesri/flight-sensor-demo/blob/master/images/FlightSeonsorGED-withTS.png)
    
    
-3. Create Two new Feature Services.
+4. Create Two new Feature Services to store Flight Locations and their Trails.
 
-   Use your favorite too to create two new feature services.  In my case, they are called Flights and Flights_trail.  Their schema should be the same.  They should all match the FlightSensorGED-withTimeStamp GoeEvent Definition.  
+   Use your favorite tool to create two new feature services.  In my case, they are called Flights and Flights_trail.  Their schemas should be the same.  They should all match the FlightSensorGED-withTimeStamp GoeEvent Definition.  I keep the last known position of flights in Flights.  I keep a history of flight positions in Flights_trail.  I will use the delete features function in the "Add a Feature" output of GeoEvent to keep the history to a certain extent.
    
-4. Create an Input Connector using the 
-
+   Tip:  With GeoEvent 10.5.0, you are able to create feature services using the "Add a Feature" output.
    
+5. Create an Input using the newly created MQTT Input connector 
 
+   ![Image of Mqtt Input]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/Mqtt-Input.png)
+   
+   - Choose an existing GeoEvent Definition name.  In this case, it is FlightSensorGED which is the version that does not have the timestamp.
+   
+   - Set "Build Geometry From Fields" to yes.  Set the x field to lon and y field to lat.
+   
+   - Set "Host" to your Mqtt Broker.  
+   
+   - Set "Topic" to the topic you publish to.  Topic is described in the "Install Kura and the FlightSensor Package on Raspberry Pi" section.
+   
+6. Create an "Add a Feature" Output for Flight Trails
+
+   ![Image of Flight trails output]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/Output-trail.png)
+   
+   - Select the Flights_trail feature service and layer.
+   
+   - Set "Delete Old Features" to yes.  Choose a "Maximum Feature Age".  This number determins how long the trail is going to be.  Select "received_time" field as the "Time Field in Feature Class".
+   
+7. Create an "Update a Feature" Output for Last Positions of Flights
+
+   ![Image of Flight trails output]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/Output-trail.png)
+   
+   - Select the Flights feature service and layer.
+   
+   - Set "Delete Old Features" to yes.  Choose a "Maximum Feature Age".  In this case, we are deleting features that are not updated anymore.  For example, when a flight leaves the area that can be detected by the device, the feature still exists in the feature service.  However, since the device will not receive further updates about this flight, the received_time field will remain the same.  As time goes by, we want to purge these records from the feature service.
+   
+8. Create a GeoEvent Service
+
+   First, drag a processor to the service screen.  Select "Field Mapper" from a list of processors.  Select "FlightSensorGED" as the source GeoEvent Definition and "FlightSensorGED-withTimeStamp" as the Target GeoEvent Definition.  Since most fields match, the source fields will be automatically filled out except for the "received_time" field.  Select "$RECEIVED_TIME" from the source fields.  This is a system variable for GeoEvent which defines when the event is received.
+   
+   ![Image of Field Mapper]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/Field-Mapper.png)
+   
+   Then, drag the input and outputs to the service screen.  With the current version of the Mqtt transport, you can only subscribe to one topic in each input.  As a result, if you want to receive data from multiple topics, you may have multiple inputs.  Connect the inputs to the Field Mapper and then connect the Field Mapper to each output.
+   
+   ![Image of the Flight Sensor Service]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/Service.png)
+   
+   Now you have completed a GeoEvent service that saves the flights and trails into feature services.
+   
+   
