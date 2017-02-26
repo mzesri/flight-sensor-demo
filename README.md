@@ -14,6 +14,13 @@ Ingredients:
 
 This guide assumes you already have the Raspberry Pi provisioned.  This includes the OS (Raspbian is the one I used), wired or wireless internet connection, and ssh enabled.  All the works on the raspberry pi can be done via ssh or via a command window on the Raspberry Pi desktop.
 
+Table of Contents:
+
+- [Enable the NESDR USB stick and install dump1090](#enable-the-nesdr-usb-stick-and-install-dump1090)
+- [Install Kura and the FlightSensor Package on Raspberry Pi](#install-kura-and-the-flightsensor-package-on-raspberry-pi)
+- [Set up a GeoEvent server to publish the flight info in JSON format to feature services](#set-up-a-geoevent-server-to-publish-the-flight-info-in-json-format-to-feature-services)
+- [Set up a web map to display the flights](#set-up-a-web-map-to-display-the-flights)
+
 ## Enable the NESDR USB stick and install dump1090
 
 Reference: http://www.satsignal.eu/raspberry-pi/dump1090.html
@@ -198,7 +205,7 @@ Reference: https://eclipse.github.io/kura/doc/raspberry-pi-quick-start.html
    
    Now you are able to receive the flight data nad send the flight data to the mqtt server at a fixed interval.  You can use the MQTTLens (https://chrome.google.com/webstore/detail/mqttlens/hemojaaeigabkbcookmlgmdigohjobjm?hl=en) to connect to the Mqtt broker and subscribe to your topic.
    
-## Set up a GeoEvent server to publish the flight info in JSON format to feature services.
+## Set up a GeoEvent server to publish the flight info in JSON format to feature services
 
 This is assuming you have access to and the knowledge of the ArcGIS server and GeoEvent extension.  This is really the focus of this exercise since this demo is created for the IoT session of the Esri DevSummit.  Also, a word of caution: consider the access level of the features.  If you want people to see the features outside your firewall, you may want to use a ArcGIS Server that is assessible from outside the firewall.
 
