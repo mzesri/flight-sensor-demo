@@ -1,12 +1,18 @@
 # flight-sensor-demo
 A step-to-step guide to setting up a raspberry pi as a flight data source and displaying the flights on an ArcGIS online webmap
 
+   ![Image of Flight Sensor]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/Screenshot.png)
+   
 Ingredients:
 
 1. Raspberry Pi (2 model B or 3 model B) 
 2. NooElec NESDR Mini 2 SDR & DVB-T USB Stick (RTL2832 + R820T2) with Antenna and Remote Control
 
-This guide assumes you already have the Raspberry Pi provisioned.  This includes the OS (Raspbian is the one I used), wired or wireless internet connection, and ssh enabled.  Everything in this guide can be done via ssh or via a command window on the Raspberry Pi desktop.
+   ![Image of the Device and the Sensor]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/RaspPiAndSensor.png)
+
+This guide assumes you already have the Raspberry Pi provisioned.  This includes the OS (Raspbian is the one I used), wired or wireless internet connection, and ssh enabled.  All the works on the raspberry pi can be done via ssh or via a command window on the Raspberry Pi desktop.
 
 ## Enable the NESDR USB stick and install dump1090
 
@@ -194,7 +200,7 @@ Reference: https://eclipse.github.io/kura/doc/raspberry-pi-quick-start.html
    
 ## Set up a GeoEvent server to publish the flight info in JSON format to feature services.
 
-This is assuming you have access to and the knowledge of the ArcGIS server and GeoEvent extension.  This is really the focus of this exercise since this demo is created for the IoT session of the Esri DevSummit.
+This is assuming you have access to and the knowledge of the ArcGIS server and GeoEvent extension.  This is really the focus of this exercise since this demo is created for the IoT session of the Esri DevSummit.  Also, a word of caution: consider the access level of the features.  If you want people to see the features outside your firewall, you may want to use a ArcGIS Server that is assessible from outside the firewall.
 
 Reference: https://server.arcgis.com/en/geoevent/
 
@@ -282,6 +288,75 @@ Reference: https://server.arcgis.com/en/geoevent/
    ![Image of the Flight Sensor Service]
    (https://github.com/mzesri/flight-sensor-demo/blob/master/images/Service.png)
    
-   Now you have completed a GeoEvent service that saves the flights and trails into feature services.
+   Now you have completed a GeoEvent service that saves the flights and trails into feature services.  From the Monitoring page of GeoEvent, you should be able to see the events coming from the MQTT Input or Inputs and eventually going to the two feature service outputs.  
    
+## Set up a web map to display the flights
+
+This is assuming you have access to ArcGIS.com.  You will learn how to put layers on the web map and how to render features with the following steps.
+
+1. Create a new webmap.  After you log into ArcGIS.com, click on the Map link.  This will take you to a new web map page.
+
+   ![Image of the New Web Map]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/NewWebMap.png)
+   
+2. Select a base map.  Click on the Basemap icon and select a basemap from the dropdown.  I choose the Dark Gray Canvas basemap for the demo
+
+   ![Image of Choosing a basemap]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/ChooseBaseMap.png)
+   
+3. Add the Flights layer and the Flights_trail layer.  Click on the down arrow next to the Add icon.  Select "Add Layer from Web".  Enter the url of the Flights layer in the URL textbox.  The **ADD LAYER** button will become enabled in a second.  Click the **ADD LAYER** button.
+   
+   ![Image of Adding a layer]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/AddLayer.png)
+   
+   Use the same method to add the Flights_trail layer.
+   
+4. Once you have both layers added, the initial map will look like this.  You will now change the symbols for these features.
+
+   ![Image of the Initial Map]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/InitialMap.png)
+   
+5. Change the Symbol for Flights.  Move the cursor to the Flights layer, the options icons show up under the layer.  Choose the **Change Style** icon.
+
+   ![Image of Change Style]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/FlightsChangeStyles.png)
+   
+   The **Change Style** menu is now displayed.  Click on the **OPTIONS** image under **Select a drawing style**.  
+   
+   ![Image of Drawing Style Option]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/DrawingStyleOptions.png)
+   
+   The **Showing Location Only** menu is displayed.  Click on the **Symbols** link next to the default symbol.
+   
+   ![Image of Select Symbols]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/SelectSymbols.png)
+   
+   A new menu pops up with different symbol options.  Click on the **Use an Image** link.
+   
+   ![Image of Use An Image for Symbols]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/UseAnImage.png)
+   
+   Enter "http://geoeventsample1.esri.com/icons/airplanes/topview/airplane-red-7.png" in the textbox under the **Use an Image** link.  Click the plus symbol next to the textbox.  The red airplane symbol should now be displayed.  Set the **Symbol Size** to 45.
+   
+   ![Image of Setting the Image URL and Size]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/ImageUrlAndSize.png)
+   
+   After you set the symbol for the Flights layer, you are now back to the **Showing Location Only** menu.  You can check the **Rotate symbols (degrees)** checkbox and choose the attribute "track" so that the symbol will be rotated based on this "track" field.
+   
+   ![Image of Rotating the symbol]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/RotateSymbol.png)
+   
+   You are done with the Flights layer.  Now you need to change the symbol for the Flights trail layer.  The steps are similar, except that instead of using an image, you will just use the dot from the provided symbols.  I choose a grey dot without outline with a size of 5 to show the trail of each flight.
+   
+6. Set a refresh rate.  Click on the dots under the Flights layer to open the context menu.  Click on **Refresh Interval**.  In the new window that opened next to it, enter 0.1 minutes as the refresh interval.  This will refresh the Flights layer every 6 seconds.  Do the same to the Flights trail layer.
+
+   ![Image of Setting Refresh Interval]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/RefreshInterval.png)
+   
+7.  Finally, you must save the web map.  Click on the Save icon to open the **Save Map** dialog.  Enter Title, Tags, Summary and where you want to save the map.  Click the "SAVE MAP" button to save the web map.
+
+   ![Image of Saving the Web Map]
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/Save.png)
+   
+   You can also click on the **Share** button to share the web map with others.
    
