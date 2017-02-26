@@ -10,7 +10,7 @@ Ingredients:
 2. NooElec NESDR Mini 2 SDR & DVB-T USB Stick (RTL2832 + R820T2) with Antenna and Remote Control
 
    ![Image of the Device and the Sensor]
-   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/RaspPiAndSensor.png)
+   (https://github.com/mzesri/flight-sensor-demo/blob/master/images/RaspPiAndSensor.jpeg)
 
 This guide assumes you already have the Raspberry Pi provisioned.  This includes the OS (Raspbian is the one I used), wired or wireless internet connection, and ssh enabled.  All the works on the raspberry pi can be done via ssh or via a command window on the Raspberry Pi desktop.
 
