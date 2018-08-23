@@ -179,7 +179,7 @@ Reference: https://eclipse.github.io/kura/doc/raspberry-pi-quick-start.html
    
 7. Compile and install the FlightSensor package.
    
-   Download the flightsensor eclipse project from this repo.  Import the project to Eclipse.  Follow this example https://eclipse.github.io/kura/doc/hello-example.html to build the OSGI bundle and create a deployment package.
+   Download the flightsensor eclipse project from this repo.  Import the project to Eclipse.  Follow this example https://eclipse.github.io/kura/dev/hello-example.html to build the OSGI bundle and create a deployment package.
    
    Once you have the .dp file, you can use the Kura UI that is open on your mac or pc to import the package.  If you run the Kura UI on the pi, you will need to scp the file to the pi first.
    
